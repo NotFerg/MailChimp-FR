@@ -27,88 +27,88 @@ app.use(express.json());
 
     const listId="2cb89ce8c4";
 
-    const subscribingUser = {
-      firstName: fname,
-      lastName: lname,
-      email: email
-     };
+    // const subscribingUser = {
+    //   firstName: fname,
+    //   lastName: lname,
+    //   email: email
+    //  };
 
-     const run = async () => {
-      try{
-          const response = await client.lists.batchListMembers(listId, {
-            members: [{
-              email_address: subscribingUser.email,
-              status: "subscribed",
-              merge_fields: {
-                FNAME: subscribingUser.firstName,
-                LNAME: subscribingUser.lastName
-              }
-            }],
-          });
+    //  const run = async () => {
+    //   try{
+    //       const response = await client.lists.batchListMembers(listId, {
+    //         members: [{
+    //           email_address: subscribingUser.email,
+    //           status: "subscribed",
+    //           merge_fields: {
+    //             FNAME: subscribingUser.firstName,
+    //             LNAME: subscribingUser.lastName
+    //           }
+    //         }],
+    //       });
           
-          if (response.errors && response.errors.length > 0) {
-            const error = response.errors[0]; // Access the first error object
-            const errorCode = error.error_code;
-            console.log("Error code:", errorCode);
-            console.log("Error message:", error.error);
-            console.log("Email address:", error.email_address);
-            res.sendFile(__dirname+"/failure.html");
-          }
-           else {
-            // Success: no errors
-            // console.log("Successfully added member to the list");
-            res.sendFile(__dirname+"/success.html");
-          }
-          // console.log(response);
-      } 
-      catch (error) {
-          // Handle any other errors
-          console.error("An error occurred:", error);
-          res.sendFile(__dirname+"/failure.html");
-        }   
-    };
-    run();
-     
-    //depricated code
-    // var data = {
-    //   members:[
-    //     {
-    //       email_address: email,
-    //       status: "subscribed",
-    //       merge_fields: {
-    //         FNAME: fname,
-    //         LNAME: lname
+    //       if (response.errors && response.errors.length > 0) {
+    //         const error = response.errors[0]; // Access the first error object
+    //         const errorCode = error.error_code;
+    //         console.log("Error code:", errorCode);
+    //         console.log("Error message:", error.error);
+    //         console.log("Email address:", error.email_address);
+    //         res.sendFile(__dirname+"/failure.html");
     //       }
-    //     }
-    //   ]
+    //        else {
+    //         // Success: no errors
+    //         // console.log("Successfully added member to the list");
+    //         res.sendFile(__dirname+"/success.html");
+    //       }
+    //       // console.log(response);
+    //   } 
+    //   catch (error) {
+    //       // Handle any other errors
+    //       console.error("An error occurred:", error);
+    //       res.sendFile(__dirname+"/failure.html");
+    //     }   
     // };
+    // run();
+     
+    // depricated code
+    var data = {
+      members:[
+        {
+          email_address: email,
+          status: "subscribed",
+          merge_fields: {
+            FNAME: fname,
+            LNAME: lname
+          }
+        }
+      ]
+    };
 
-    // var jsonData = JSON.stringify(data);
+    var jsonData = JSON.stringify(data);
 
-    // const url = "https://us9.api.mailchimp.com/3.0/lists/2cb89ce8c4";
+    const url = "https://us9.api.mailchimp.com/3.0/lists/2cb89ce8c4";
 
-    // const options = {
-    //   method:"POST",
-    //   auth: "Ferg:65638b53051875e3cf694b6dc1b0393a-us9"
-    // }
+    const options = {
+      method:"POST",
+      auth: "Ferg:65638b53051875e3cf694b6dc1b0393a-us9"
+    }
 
-    // const request = https.request(url,options,function (response) {
-    //   response.on("data",(data)=>{
-    //     console.log(JSON.parse(data));
+    const request = https.request(url,options,function (response) {
+      response.on("data",(data)=>{
+        console.log(JSON.parse(data));
 
-    //     if ((JSON.parse(data)).error_count === 0) {
-    //       console.log(response.statusCode);
-    //       res.sendFile(__dirname + '/success.html');
-    //     } 
-    //     else if ((JSON.parse(data)).errors[0].error_code === 'ERROR_CONTACT_EXISTS' || (JSON.parse(data)).errors[0].error_code === 'ERROR_GENERIC'){
-    //       res.sendFile(__dirname + '/failure.html');
-    //     };
+        if ((JSON.parse(data)).error_count === 0) {
+          console.log(response.statusCode);
+          res.sendFile(__dirname + '/success.html');
+        } 
+        else if ((JSON.parse(data)).errors[0].error_code === 'ERROR_CONTACT_EXISTS' || (JSON.parse(data)).errors[0].error_code === 'ERROR_GENERIC'){
+          res.sendFile(__dirname + '/failure.html');
+        };
 
-    //   });
-    // });
+      });
+    });
 
-    // request.write(jsonData);
-    // request.end();
+    request.write(jsonData);
+    request.end();
     
   });
 
